@@ -160,15 +160,89 @@ plot(datos4$x,datos4$y,type="h", lwd=3, lend="square",
      xlab="Page Ranking",ylab="Nodos")
 ```
 
+# Análisis del diámetro y la longitud.
 
-```{r}
-#library(csv)
-datos <- read.csv("~/Escritorio/Complex Networks Model 6.0 Degree Distribution.csv")
-par(mfrow=c(2,2))
-plot(datos$x,datos$y,type="h", lwd=3, lend="square")
-plot(datos$x,datos$y,type="h", lwd=3, lend="square")
-plot(datos$x,datos$y,type="h", lwd=3, lend="square")
-plot(datos$x,datos$y,type="h", lwd=3, lend="square")
+Representaremos el diámetro y la longitud para varios modelos. Estos modelos serán, Kleem-Eguilez, Watts-Strogatz, Barabasi-Albert (el usual) y el modelo Barabasi-Albert del anterior apartado. Tomaremos probabilidad $p=0.005$.
 
+La generación de estos modelos respectivamente será,
+
+```{bash, eval=FALSE}
+to errn
+  clear
+  random-seed 2017
+  KE 500 10 0.005
+  layout "radial"
+end
 ```
+
+```{bash, eval=FALSE}
+to wast
+  clear
+  random-seed 2017
+  WS 500 20 p
+  layout "radial"
+end
+```
+
+```{bash, eval=FALSE}
+to baal
+  clear
+  random-seed 2017
+  BA-PA 500 2 1
+  layout "radial"
+end
+```
+
+Y obtenemos los siguientes resultados,
+
+
+
+| Modelo        | Diámetro     | Longitud |
+|:--------------|-------------:|---------:|
+| KE            |            3 |    2.354 |
+| WS            |            9 |    4.662 |
+| BA            |           12 |    5.915 |
+| BA modificado |            6 |    3.875 |
+
+Destacar en especial, que el modelo WS depende del grado inicial. A mayor grado inicial, menor diámetro y longitud. También tiene sentido las diferencias entre el BA y el BA modificado, ya que a uno de ellos estamos añadiendole mas aristas.
+
+# Experimentos de infección
+
+Por los resultados obtenidos en el anteriror apartado, parace interesante ver como se comportaria una infencción en una red BA con los parámetros usados anteriormente.
+
+```{bash, eval=FALSE}
+to baal
+  clear
+  random-seed 2017
+  BA-PA 500 2 1
+  layout "radial"
+end
+```
+
+Por ello usaremos la función `Spread m ps pr pin iter` de Netlogo. Presenta los siguientes parámetros
+
+* `m`: El número de nodos infectado.
+
+* `ps`: Probabilidad de infección a un nodo contiguo.
+
+* `pr`: Probabilidad de recuperacción.
+
+* `pin`: Probabilidad de inmunidad despues de una recuperación.
+
+* `iter`: Número de iteracciones.
+
+Despues de interaccionar con los parámetros observamos lo siguiente.
+
+* Si la probabilidad de recuperación es baja, entonces por muy alto que sea la probabilidad de inmunidad, es muy probable que la red acabe contagiada por completo. Si aumentamos el número de iteracciones se empiezan a observar algunas inmunidades.
+
+* Si la probabilidad de inmunidad tras la recuperación es alta, tras un número de iteracciones no demasiado grande, la red se hace inmune a la enfermedad.
+
+* Sea cual sea la cantidad de nodos que tomemos al inicio, si los parametros de contagio son razonables, la enfermedad llega a los "centros" de la red en pocas iteracciones. De la misma manera, los elementos mas alejados del centro tardan más en adquirir la enfermedad.
+
+* Si escogemos parámetros distintos a cero para cada probabilidad, en suficientes interacciones llegamos a la inmunidad en toda la red.
+
+
+
+
+
 
